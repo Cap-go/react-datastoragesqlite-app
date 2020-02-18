@@ -1,0 +1,54 @@
+{
+  "name": "react-datastoragesqlite-app",
+  "version": "0.0.1",
+  "private": true,
+  "homepage": "./",
+  "dependencies": {
+    "@capacitor/android": "^1.5.0",
+    "@capacitor/cli": "^1.5.0",
+    "@capacitor/core": "^1.5.0",
+    "@capacitor/ios": "^1.5.0",
+    "@jeepq/capacitor": "0.0.3-2",
+    "@jeepq/react": "0.0.3-2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.0"
+  },
+  "keywords": [
+    "React",
+    "stencil",
+    "web component",
+    "color",
+    "color picker"
+  ],
+  "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "update": "npm install --save @jeepq/react@latest",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "fsevents": "^2.1.0",
+    "lodash": "^4.17.15",
+    "source-map-explorer": "^2.1.0",
+    "typescript": "~3.6.4"
+  }
+}

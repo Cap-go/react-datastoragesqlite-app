@@ -1,0 +1,29 @@
+
+:root {
+  --title-font-size: 24px;
+  --header-height: 100px;
+  --gcolorpicker-button-font-size: 12px;
+  --gcolorpicker-button-border: 2px solid;
+  /*  2 * 2px is coming from the border width given in --gcolorpicker-button-border
+      2px is coming from the fixed padding of the button (padding: 1px 6px)*/
+  --button-height: calc(var(--gcolorpicker-button-font-size) + 2 * 2px + 2px);
+  --gcolorpicker-width: 80vw;
+  --gcolorpicker-height: 60vmin;
+  --gcolorpicker-top: calc(100vh - var(--gcolorpicker-height));
+  --gcolorpicker-left: 10vmin;
+}
+#header {
+  display: flex;
+  width: 100vw;
+  height: var(--header-height);
+  align-items: center;
+  padding-left: 10px;
+}
+#header button {
+  font-size: 1rem;
+}
+#title {
+  text-align: center;
+  font-size: var(--title-font-size);
+  padding-left: 20px;
+}
