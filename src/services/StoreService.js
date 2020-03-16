@@ -1,5 +1,5 @@
 import { Plugins } from '@capacitor/core';
-import * as PluginsLibrary from '@jeepq/capacitor';
+import * as PluginsLibrary from 'capacitor-data-storage-sqlite';
 const { CapacitorDataStorageSqlite, Device } = Plugins;
 
 export class StoreService {
