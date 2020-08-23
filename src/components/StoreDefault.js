@@ -1,115 +1,116 @@
-import React from "react";
+import React, { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import "./StoreDefault.css";
-import { StoreService } from "../services/StoreService";
+import { useStorageSQLite } from 'react-data-storage-sqlite-hook/dist';
 
-class StoreDefault extends React.Component{
 
-  constructor() {
-    super();
-    this.store = new StoreService();
-    console.log("in constructor this.store ",this.store)
-  }
+const StoreDefault = () => {
+  const [log, setLog] = useState([]);
 
-  async componentDidMount() {
-    await this.store.init();
-    console.log('store.isService ',this.store.isService());
-    console.log('store.platform ',this.store.platform());
-    await this.testStoreDefault();
-  }
-
-  componentWillUnmount() {
-    this.store = null;
-  }
-  async testStoreDefault() {
-    const keyList1 = ["session","testJson","testNumber"];
-
-    // open a default store 
-    console.log("**** Test Default Store");
-    var result = await this.store.openStore({});
-    if(result) {
-      console.log('Default Database open ', result);
-      await this.store.clear();
-      // store a string in the default store
-      await this.store.setItem("session","Session Opened");
-      // read session from the store
-      result = await this.store.getItem("session");
-      console.log('Get Session ', result);
-      // store a JSON Object in the default store
-      const data = {'a':20,'b':'Hello World','c':{'c1':40,'c2':'cool'}};
-      await this.store.setItem("testJson",JSON.stringify(data));
-      result = await this.store.getItem("testJson");
-      console.log("Get JSON Object : " + result);
-      // store a number in the default store
-      const data1 = 243.567;
-      await this.store.setItem("testNumber",data1.toString());
-      // read number from the store
-      result = await this.store.getItem("testNumber");
-      console.log("Get Number : " + result);
-      // isKey test
-      const isKey1 = await this.store.isKey("testNumber");
-      console.log("isKey testNumber " + isKey1);
-      const isKey2 = await this.store.isKey("foo");
-      console.log("isKey foo " + isKey2);
-      // Get All Keys
-      result = await this.store.getAllKeys();
-      console.log("Get keys : " + result);
-      console.log("Keys length " + result.length);
-      // Get All Values
-      result = await this.store.getAllValues();
-      console.log("Get values : " + result);
-      console.log("Values length " + result.length);
-      // Get All Key/Values      
-      result = await this.store.getAllKeysValues();
-      result.forEach(element => {
-        console.log(element);
-      });
-      console.log("KeysValues length " + result.length);
-      // Remove a Key
-      result = await this.store.removeItem("testJson");
-      result = await this.store.getAllKeys();
-      console.log("Get keys : " + result);
-      console.log("Keys length " + result.length);
-      if(isKey1 && !isKey2 && result && result.length === 2 && 
-        keyList1.includes(result[0]) && keyList1.includes(result[1])) {
-          console.log("test default store was successfull");
-          document.querySelector('.success').classList.remove('display');
-        } else {
-          console.log("test default store was not successfull");
-          document.querySelector('.failure').classList.remove('display');
+  const {openStore, getItem, setItem, getAllKeys, getAllValues,
+    getAllKeysValues, isKey, setTable, removeItem, clear} = useStorageSQLite();
+  useEffect(() => {
+    async function testStoreDefault() {
+      const keyList1 = ["session","testJson","testNumber"];
+      // open a default store 
+      setLog((log) => log.concat("**** Test Default Store ****\n")); 
+      const resOpen =  await openStore({});
+      if(resOpen) {
+        setLog((log) => log.concat('open Default Store ' + resOpen + "\n"));
+        // clear the store 
+        const rClear = await clear();
+        if( rClear ) setLog((log) => log.concat('clear Default Store ' + rClear + "\n"));
+        // store a string 
+        await setItem("session","Session Opened");
+        const session = await getItem('session');
+        if( session ) setLog((log) => log.concat("session " + session + "\n")); 
+        // store a JSON Object in the default store
+        const data = {'a':20,'b':'Hello World','c':{'c1':40,'c2':'cool'}};
+        await setItem("testJson",JSON.stringify(data));
+        const testJson = await getItem("testJson");
+        if( testJson ) setLog((log) => log.concat("testJson " + testJson + "\n")); 
+        // store a number in the default store
+        const data1 = 243.567;
+        await setItem("testNumber",data1.toString());
+        // read number from the store
+        const testNumber = await getItem("testNumber");
+        if( testNumber ) setLog((log) => log.concat("testNumber " + testNumber + "\n")); 
+        // isKey test
+        const iskey = await isKey('testNumber');
+        setLog((log) => log.concat('iskey testNumber ' + iskey + "\n")); 
+        const iskey1 = await isKey('foo');
+        setLog((log) => log.concat('iskey foo ' + iskey1 + "\n")); 
+        // Get All Keys
+        const keys = await getAllKeys();
+        setLog((log) => log.concat("keys : " + keys.length + "\n"));
+        for(let i = 0; i< keys.length;i++) {
+          setLog((log) => log.concat(' key[' + i + "] = " + keys[i] + "\n"));
         }
-
-    } else {
-      console.log("test default store was not successfull");
-      document.querySelector('.failure').classList.remove('display');
+        // Get All Values
+        const values = await getAllValues();
+        setLog((log) => log.concat("values : " + values.length + "\n"));
+        for(let i = 0; i< values.length;i++) {
+          setLog((log) => log.concat('value[' + i + "] = " + values[i] + "\n"));
+        }
+        // Get All KeysValues
+        const keysvalues = await getAllKeysValues();
+        setLog((log) => log.concat("keysvalues : " + keysvalues.length + "\n"));
+        for(let i = 0; i< keysvalues.length;i++) {
+          setLog((log) => log.concat(' key[' + i + "] = " + keysvalues[i].key +
+            ' value[' + i + "] = " + keysvalues[i].value  + "\n"));
+        }
+        // Remove a key 
+        const res = await removeItem('testJson')
+        if( res ) setLog((log) => log.concat("remove testJson " + res + "\n")); 
+        // Get All Keys
+        const keys1 = await getAllKeys();
+        setLog((log) => log.concat("keys : " + keys1.length + "\n"));
+        for(let i = 0; i< keys1.length;i++) {
+          setLog((log) => log.concat(' key[' + i + "] = " + keys1[i] + "\n"));
+        }
+        if(iskey && !iskey1 && keys1 && keys1.length === 2 && 
+          keyList1.includes(keys1[0]) && keyList1.includes(keys1[1])) {
+            setLog((log) => log.concat("*** test default store was successfull ***\n"));
+            document.querySelector('.success').classList.remove('display');
+          } else {
+            setLog((log) => log.concat("*** test default store was not successfull ***\n"));
+            document.querySelector('.failure').classList.remove('display');
+          }
+  
+      } else {
+        setLog((log) => log.concat("*** test default store was not successfull ***\n"));
+        document.querySelector('.failure').classList.remove('display');
+      }
     }
+    testStoreDefault();
+  }, [ openStore, getItem, setItem, getAllKeys, getAllValues,
+    getAllKeysValues, isKey, setTable, removeItem, clear]);   
 
-  }
-  render() {
-
-    return (
-      <React.Fragment>
-        <div className="StoreDefault">
-          <div id="header">
-            <Link to="/">
-              <button>
-                Home
-              </button>
-            </Link>
-            <p id="title">Test Store Default</p>
-          </div>
-          <div id="content">
-            <p class="success display">
-              The set of tests was successful
-            </p>
-            <p class="failure display">
-              The set of tests failed
-            </p>
-          </div>
+  return (
+    <React.Fragment>
+      <div className="StoreDefault">
+        <div id="header">
+          <Link to="/">
+            <button>
+              Home
+            </button>
+          </Link>
+          <p id="title">Test Store Default</p>
         </div>
-      </React.Fragment>
+        <div id="content">
+          <pre>
+            <p>{log}</p>
+          </pre>
+          <p class="success display">
+            The set of tests was successful
+          </p>
+          <p class="failure display">
+            The set of tests failed
+          </p>
+        </div>
+      </div>
+    </React.Fragment>
+  );
 
-    );
-  }
 }
 export default StoreDefault;

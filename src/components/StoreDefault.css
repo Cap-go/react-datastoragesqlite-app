@@ -1,3 +1,6 @@
 .display {
     display: none;
 }
+#content {
+    padding: 10px;
+}

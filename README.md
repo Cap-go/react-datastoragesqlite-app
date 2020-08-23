@@ -1,6 +1,12 @@
 # react-datastoragesqlite-app
-Sample project that shows an integration of [capacitor-data-storage-sqlite] (https://github.com/jepiqueau/capacitor-data-storage-sqlite/blob/master/readme.md) 
+Sample project that shows an integration of
+ - [capacitor-data-storage-sqlite] (https://github.com/jepiqueau/capacitor-data-storage-sqlite/blob/master/readme.md)
+
+ - [react-data-storage-sqlite-hook](https://www.npmjs.com/package/react-data-storage-sqlite-hook)
+
 in React App.
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -47,4 +53,6 @@ npx cap open android
 
 ### ELECTRON
 
-does not work
+```
+npx cap open @capacitor-community/eletron
+```
