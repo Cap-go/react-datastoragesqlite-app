@@ -1,6 +1,6 @@
 {
   "name": "react-datastoragesqlite-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "homepage": "./",
   "dependencies": {
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "2.4.0",
-    "react-data-storage-sqlite-hook": "0.0.1-beta.2",
+    "react-data-storage-sqlite-hook": "0.0.1-beta.3",
     "source-map-explorer": "^2.1.0",
     "typescript": "3.8.3"
   },
