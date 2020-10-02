@@ -18,6 +18,9 @@ git clone https://github.com/jepiqueau/react-datastoragesqlite-app.git
 cd react-datastoragesqlite-app
 git remote rm origin
 npm install
+cd electron
+npm install
+cd ..
 ```
 
 
@@ -25,10 +28,12 @@ To install the latest release of the ```capacitor-data-storage-sqlite``` plugin
 
 ```bash
 npm run update
-npx cap update
+npx cap sync
+npx cap sync @capacitor-community/electron
 npm run build
 npx cap copy
 npx cap copy web
+npx cap copy @capacitor-community/electron
 ```
 
 ## Running the app

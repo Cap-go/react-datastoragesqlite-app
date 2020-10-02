@@ -30,21 +30,6 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <script>
-    try {
-      if (process && typeof (process.versions.electron) === 'string' && process.versions.hasOwnProperty('electron')) {
-        const sqlite3 = require('sqlite3');
-        const fs = require('fs');
-        const path = require('path');
-        window.sqlite3 = sqlite3;
-        window.fs = fs;
-        window.path = path;
-      }
-    }
-    catch {
-      console.log("process doesn't exists");
-    }
-    </script>  
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

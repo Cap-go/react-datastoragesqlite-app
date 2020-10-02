@@ -1,19 +1,20 @@
 {
   "name": "react-datastoragesqlite-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "homepage": "./",
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
-    "@capacitor/android": "^2.4.0",
-    "@capacitor/core": "^2.4.0",
-    "@capacitor/ios": "^2.4.0",
-    "capacitor-data-storage-sqlite": "^2.3.0",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-router": "^5.1.2",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.3"
+    "@capacitor/android": "^2.4.2",
+    "@capacitor/core": "^2.4.2",
+    "@capacitor/ios": "^2.4.2",
+    "capacitor-data-storage-sqlite": "^2.4.2-1",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router": "latest",
+    "react-router-dom": "latest",
+    "react-scripts": "latest",
+    "typescript": "^3.9.6"
   },
   "keywords": [
     "React",
@@ -46,10 +47,10 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "2.4.0",
-    "react-data-storage-sqlite-hook": "0.0.1-beta.3",
+    "@capacitor/cli": "2.4.2",
+    "react-data-storage-sqlite-hook": "0.0.1",
     "source-map-explorer": "^2.1.0",
-    "typescript": "3.8.3"
+    "typescript": "3.9.6"
   },
   "description": "React App for capacitor-data-storage-sqlite",
   "repository": {
