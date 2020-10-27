@@ -31,6 +31,11 @@ class Home extends React.Component{
                     Two DBs Two Tables Test
               </button>
           </Link> 
+          <Link to="/storeImagesIssue31">
+              <button type="button">
+                    Test Image issue#31
+              </button>
+          </Link> 
         </div>
       </div>  
    );
