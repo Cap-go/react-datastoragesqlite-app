@@ -6,6 +6,9 @@ import { useStorageSQLite } from 'react-data-storage-sqlite-hook/dist';
 
 const StoreDefault = () => {
   const [log, setLog] = useState([]);
+  // --> below add to demonstrate issue#5
+  const [profileList, setProfileList] = useState([]);
+  // <--
 
   const {openStore, getItem, setItem, getAllKeys, getAllValues,
     getAllKeysValues, isKey, setTable, removeItem, clear} = useStorageSQLite();
@@ -59,6 +62,14 @@ const StoreDefault = () => {
           setLog((log) => log.concat(' key[' + i + "] = " + keysvalues[i].key +
             ' value[' + i + "] = " + keysvalues[i].value  + "\n"));
         }
+
+        // --> below add to demonstrate issue#5
+        console.log("keysvalues ", keysvalues);
+        let profiles = keysvalues.map(c => c["value"]);
+        console.log("profiles ", profiles);
+        setProfileList([...profiles]);
+        // <--
+
         // Remove a key 
         const res = await removeItem('testJson')
         if( res ) setLog((log) => log.concat("remove testJson " + res + "\n")); 
@@ -84,7 +95,7 @@ const StoreDefault = () => {
     }
     testStoreDefault();
   }, [ openStore, getItem, setItem, getAllKeys, getAllValues,
-    getAllKeysValues, isKey, setTable, removeItem, clear]);   
+    getAllKeysValues, isKey, setTable, removeItem, clear]); 
 
   return (
     <React.Fragment>
@@ -107,6 +118,14 @@ const StoreDefault = () => {
           <p class="failure display">
             The set of tests failed
           </p>
+          <ul>
+            {profileList.map(item => (
+              <li key={item}>
+                <div>{item}</div>
+              </li>
+            ))}
+          </ul>
+
         </div>
       </div>
     </React.Fragment>

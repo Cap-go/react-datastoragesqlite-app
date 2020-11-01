@@ -18,10 +18,9 @@
   },
   "keywords": [
     "React",
-    "stencil",
-    "web component",
-    "color",
-    "color picker"
+    "Storage",
+    "SQLite",
+    "Capacitor"
   ],
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
