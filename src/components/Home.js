@@ -36,6 +36,11 @@ class Home extends React.Component{
                     Test Image issue#31
               </button>
           </Link> 
+          <Link to="/storeprofiles">
+              <button type="button">
+                    Test Profiles
+              </button>
+          </Link> 
         </div>
       </div>  
    );

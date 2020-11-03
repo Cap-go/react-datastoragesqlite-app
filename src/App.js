@@ -9,6 +9,7 @@ import StoreOneDBOneTable from './components/StoreOneDBOneTable';
 import StoreOneDBTwoTables from './components/StoreOneDBTwoTables';
 import StoreTwoDBsTwoTables from './components/StoreTwoDBsTwoTables';
 import StoreImagesIssue31 from './components/StoreImagesIssue31';
+import StoreProfiles from './components/StoreProfiles';
 
 class App extends React.Component{
   render() {
@@ -21,6 +22,7 @@ class App extends React.Component{
           <Route path="/storeonedbtwotables" component={StoreOneDBTwoTables} />
           <Route path="/storetwodbstwotables" component={StoreTwoDBsTwoTables} />
           <Route path="/storeImagesIssue31" component={StoreImagesIssue31} />
+          <Route path="/storeprofiles" component={StoreProfiles} />
       </div> 
     </BrowserRouter>
   );
