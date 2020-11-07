@@ -2130,16 +2130,13 @@ var capacitorPlugin = (function (exports) {
             this.NodeFs = require('fs');
             this.SQLite3 = require('sqlite3');
         }
-        connection(dbName, readOnly
-        /*,key?:string*/ ) {
+        connection(dbName, readOnly) {
             return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
                 const flags = readOnly
                     ? this.SQLite3.OPEN_READONLY
                     : this.SQLite3.OPEN_CREATE | this.SQLite3.OPEN_READWRITE;
-                console.log('in UtilsSQLite.connection flags ', flags);
                 // get the path for the database
                 const dbPath = yield this._getDBPath(dbName);
-                console.log('#### dbPath ' + dbPath);
                 let dbOpen;
                 if (dbPath != null) {
                     try {
@@ -2153,15 +2150,13 @@ var capacitorPlugin = (function (exports) {
                 }
             }));
         }
-        getWritableDatabase(dbName
-        /*, secret: string*/ ) {
+        getWritableDatabase(dbName) {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = yield this.connection(dbName, false /*,secret*/);
                 return db;
             });
         }
-        getReadableDatabase(dbName
-        /*, secret: string*/ ) {
+        getReadableDatabase(dbName) {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = yield this.connection(dbName, true /*,secret*/);
                 return db;
@@ -2213,22 +2208,21 @@ var capacitorPlugin = (function (exports) {
         openStore(dbName, tableName) {
             return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
                 let ret = false;
-                this._db = yield this._utils.connection(dbName, false
-                /*,this._secret*/ );
+                this._db = yield this._utils.connection(dbName, false);
                 if (this._db !== null) {
                     const bRet = yield this._createTable(tableName);
                     if (bRet) {
                         this._dbName = dbName;
                         this._tableName = tableName;
-                        console.log("** OpenStore this._tableName "
-                            + this._tableName);
+                        console.log('** OpenStore this._tableName ' +
+                            this._tableName);
                         ret = true;
                     }
                     else {
-                        this._dbName = "";
-                        this._tableName = "";
-                        console.log("** OpenStore this._tableName "
-                            + this._tableName + " failed");
+                        this._dbName = '';
+                        this._tableName = '';
+                        console.log('** OpenStore this._tableName ' +
+                            this._tableName + ' failed');
                     }
                 }
                 resolve(ret);
@@ -2294,7 +2288,7 @@ var capacitorPlugin = (function (exports) {
                     ret = true;
                 }
                 else {
-                    this._tableName = "";
+                    this._tableName = '';
                     ret = false;
                 }
                 this._db.close();
@@ -2455,8 +2449,9 @@ var capacitorPlugin = (function (exports) {
         keys() {
             return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
                 const db = yield this._utils.getReadableDatabase(this._dbName /*,this._secret*/);
-                const DATA_SELECT_KEYS = `SELECT "${COL_NAME}" FROM "${this._tableName}"`;
-                db.all(DATA_SELECT_KEYS, (err, rows) => {
+                let SELECT_KEYS = `SELECT "${COL_NAME}" FROM `;
+                SELECT_KEYS += `"${this._tableName}"`;
+                db.all(SELECT_KEYS, (err, rows) => {
                     if (err) {
                         db.close();
                         resolve([]);
@@ -2477,8 +2472,36 @@ var capacitorPlugin = (function (exports) {
         values() {
             return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
                 const db = yield this._utils.getReadableDatabase(this._dbName /*,this._secret*/);
-                const DATA_SELECT_VALUES = `SELECT "${COL_VALUE}" FROM "${this._tableName}"`;
-                db.all(DATA_SELECT_VALUES, (err, rows) => {
+                let SELECT_VALUES = `SELECT "${COL_VALUE}" FROM `;
+                SELECT_VALUES += `"${this._tableName}"`;
+                db.all(SELECT_VALUES, (err, rows) => {
+                    if (err) {
+                        db.close();
+                        resolve([]);
+                    }
+                    else {
+                        let arValues = [];
+                        for (let i = 0; i < rows.length; i++) {
+                            arValues = [...arValues, rows[i].value];
+                            if (i === rows.length - 1) {
+                                db.close();
+                                resolve(arValues);
+                            }
+                        }
+                    }
+                });
+            }));
+        }
+        filtervalues(filter) {
+            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+                if (!filter.startsWith("%") && !filter.endsWith("%")) {
+                    filter = "%" + filter + "%";
+                }
+                const db = yield this._utils.getReadableDatabase(this._dbName /*,this._secret*/);
+                let SELECT_VALUES = `SELECT "${COL_VALUE}" FROM `;
+                SELECT_VALUES += `"${this._tableName}" WHERE name `;
+                SELECT_VALUES += `LIKE "${filter}"`;
+                db.all(SELECT_VALUES, (err, rows) => {
                     if (err) {
                         db.close();
                         resolve([]);
@@ -2499,8 +2522,9 @@ var capacitorPlugin = (function (exports) {
         keysvalues() {
             return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
                 const db = yield this._utils.getReadableDatabase(this._dbName /*,this._secret*/);
-                const DATA_SELECT_KEYSVALUES = `SELECT "${COL_NAME}" , "${COL_VALUE}" FROM "${this._tableName}"`;
-                db.all(DATA_SELECT_KEYSVALUES, (err, rows) => {
+                let SELECT_KEYSVALUES = `SELECT "${COL_NAME}" , `;
+                SELECT_KEYSVALUES += `"${COL_VALUE}" FROM "${this._tableName}"`;
+                db.all(SELECT_KEYSVALUES, (err, rows) => {
                     if (err) {
                         db.close();
                         resolve([]);
@@ -2543,7 +2567,7 @@ var capacitorPlugin = (function (exports) {
         echo(options) {
             return __awaiter(this, void 0, void 0, function* () {
                 console.log('ECHO in Electron Plugin', options);
-                return options;
+                return { value: options.value };
             });
         }
         openStore(options) {
@@ -2658,6 +2682,18 @@ var capacitorPlugin = (function (exports) {
             return __awaiter(this, void 0, void 0, function* () {
                 let ret;
                 ret = yield this.mDb.values();
+                return Promise.resolve({ values: ret });
+            });
+        }
+        filtervalues(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let filter = options.filter;
+                if (filter == null || typeof filter != 'string') {
+                    return Promise.reject({ result: false,
+                        message: 'Must Must provide filter as string' });
+                }
+                let ret;
+                ret = yield this.mDb.filtervalues(filter);
                 return Promise.resolve({ values: ret });
             });
         }
