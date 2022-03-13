@@ -12,23 +12,30 @@ const StoreOneDBOneTable = () => {
   useEffect(() => {
     async function testNamedStore() {
       const keyList1 = ["app","user"];
-      // open a named store 
-      setLog((log) => log.concat("**** Test One DB One Table Store ****\n")); 
-      const resOpen =  await openStore({database:"myStore",table:"saveData"});
-      if(resOpen) {
-        setLog((log) => log.concat('One DB One Table Store open ' + resOpen + "\n"));
+      try {
+        // open a named store 
+        setLog((log) => log.concat("**** Test One DB One Table Store ****\n")); 
+        await openStore({database:"myStore",table:"saveData"});
+        setLog((log) => log.concat("One DB One Table Store open \n"));
         // clear the store for successive test runs
-        const rClear = await clear();
-        if( rClear ) setLog((log) => log.concat('clear One DB One Table Store ' + rClear + "\n")); 
+        await clear();
         // store a string 
         await setItem("app","App Opened");
         const app = await getItem('app');
-        if( app ) setLog((log) => log.concat("app " + app + "\n")); 
+        if( app != null ) {
+          setLog((log) => log.concat("app " + app + "\n")); 
+        } else {
+          throw(Error("app return null"));
+        }
         // store a JSON Object in the default store
         const data = {'age':40,'name':'jeep','email':'jeep@example.com'}
         await setItem("user",JSON.stringify(data));
         const testUser = await getItem("user");
-        if( testUser ) setLog((log) => log.concat("testUser " + testUser + "\n")); 
+        if( testUser ) {
+          setLog((log) => log.concat("testUser " + testUser + "\n")); 
+        } else {
+          throw(Error("testUser return null"));
+        }
         // Get All Keys
         const keys = await getAllKeys();
         setLog((log) => log.concat("keys : " + keys.length + "\n"));
@@ -43,7 +50,8 @@ const StoreOneDBOneTable = () => {
             setLog((log) => log.concat("*** test one DB one Table Store was not successfull ***\n"));
             document.querySelector('.failure').classList.remove('display');
           }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** test one DB one Table Store was not successfull ***\n"));
         document.querySelector('.failure').classList.remove('display');
       }
@@ -67,10 +75,10 @@ const StoreOneDBOneTable = () => {
           <pre>
             <p>{log}</p>
           </pre>
-          <p class="success display">
+          <p className="success display">
             The set of tests was successful
           </p>
-          <p class="failure display">
+          <p className="failure display">
             The set of tests failed
           </p>
         </div>

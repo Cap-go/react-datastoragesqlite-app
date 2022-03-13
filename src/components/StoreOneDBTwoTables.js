@@ -13,23 +13,31 @@ const StoreOneDBTwoTables = () => {
     const keyList2 = ["key1","key2"];
     async function setFirstTable() {
       var firstTable = false;
-      // open a named store 
-      setLog((log) => log.concat("**** Test One DB One Table Store ****\n")); 
-      const resOpen =  await openStore({database:"myStore",table:"saveData"});
-      if(resOpen) {
-        setLog((log) => log.concat('One DB One Table Store open ' + resOpen + "\n"));
+      try {
+        // open a named store 
+        setLog((log) => log.concat("**** Test One DB One Table Store ****\n")); 
+        await openStore({database:"myStore",table:"saveData"});
+        setLog((log) => log.concat('One DB One Table Store open \n'));
         // clear the store table "saveData" for successive test runs
-        const rClear = await clear();
-        if( rClear ) setLog((log) => log.concat('clear One DB One Table Store ' + rClear + "\n")); 
+        await clear();
+        setLog((log) => log.concat('clear One DB One Table Store \n')); 
         // store a string 
         await setItem("app","App Opened");
         const app = await getItem('app');
-        if( app ) setLog((log) => log.concat("app " + app + "\n")); 
+        if( app ) {
+          setLog((log) => log.concat("app " + app + "\n")); 
+        } else {
+          throw(Error("app return null"));
+        }
         // store a JSON Object in the default store
         const data = {'age':40,'name':'jeep','email':'jeep@example.com'}
         await setItem("user",JSON.stringify(data));
         const testUser = await getItem("user");
-        if( testUser ) setLog((log) => log.concat("testUser " + testUser + "\n")); 
+        if( testUser != null ) {
+          setLog((log) => log.concat("testUser " + testUser + "\n")); 
+        } else {
+          throw(Error("testUser return null"));
+        }
         // Get All Keys
         const keys = await getAllKeys();
         setLog((log) => log.concat("keys : " + keys.length + "\n"));
@@ -43,28 +51,36 @@ const StoreOneDBTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Set First Table Store was not successfull ***\n"));
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Set First Table Store was not successfull ***\n"));
       }
       return firstTable;
     }
     async function setSecondTable() {
       var secondTable = false;
-      const r = await setTable("otherData");
-      setLog((log) => log.concat('set table "otherData" result ' + r.result + " message " +
-            r.message + "\n")); 
-      if(r.result) {
+      try {
+        await setTable("otherData");
+        setLog((log) => log.concat('set table "otherData" \n')); 
         // clear the store table "otherData" for successive test runs
-        const rClear = await clear();
-        if( rClear ) setLog((log) => log.concat('clear "otherData" table ' + rClear + "\n")); 
+        await clear();
+        setLog((log) => log.concat('clear "otherData" table \n')); 
         // store data in the new table
         await setItem("key1", "Hello World!");
         const testKey1 = await getItem("key1");
-        if( testKey1 ) setLog((log) => log.concat("testKey1 " + testKey1 + "\n")); 
+        if( testKey1 != null ) {
+          setLog((log) => log.concat("testKey1 " + testKey1 + "\n")); 
+        } else {
+          throw(Error("testKey1 return null"));
+        }
         const data1 = {'a':60,'pi':'3.141516','b':'cool'}
         await setItem("key2",JSON.stringify(data1));
         const testKey2 = await getItem("key2");
-        if( testKey2 ) setLog((log) => log.concat("testKey2 " + testKey2 + "\n")); 
+        if( testKey2 != null) {
+          setLog((log) => log.concat("testKey2 " + testKey2 + "\n")); 
+        } else {
+          throw(Error("testKey2 return null"));
+        }
         const keys = await getAllKeys();
         setLog((log) => log.concat("keys : " + keys.length + "\n"));
         for(let i = 0; i< keys.length;i++) {
@@ -77,22 +93,26 @@ const StoreOneDBTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Set Second Table Store was not successfull ***\n"));
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Set Second Table Store was not successfull ***\n"));        
       }
       return secondTable;
     }
     async function updateFirstTable() {
       var firstTable = false;
-      const r = await setTable("saveData");
-      setLog((log) => log.concat('set table "saveData" result ' + r.result + " message " +
-            r.message + "\n")); 
-      if(r.result) {
+      try {
+        await setTable("saveData");
+        setLog((log) => log.concat('set table "saveData" result \n')); 
         await setItem("state",JSON.stringify({'color':"#ff235a",'opacity':0.75}));
         // read app from the store
         const testState = await getItem("state");
-        if( testState ) setLog((log) => log.concat("state " + testState + "\n")); 
-        // Get All Keys
+        if( testState ) {
+           setLog((log) => log.concat("state " + testState + "\n")); 
+          } else {
+            throw(Error("testState return null"));
+          }
+          // Get All Keys
         const keys = await getAllKeys();
         setLog((log) => log.concat("keys : " + keys.length + "\n"));
         for(let i = 0; i< keys.length;i++) {
@@ -106,17 +126,17 @@ const StoreOneDBTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Update First Table Store was not successfull ***\n"));        
         }           
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Update First Table Store was not successfull ***\n"));        
       }
       return firstTable;
     }
     async function getKeysValuesFromSecondTable() {
       var secondTable = false;
-      const r = await setTable("otherData");
-      setLog((log) => log.concat('set table "otherData" result ' + r.result + " message " +
-            r.message + "\n")); 
-      if(r.result) {
+      try {
+        await setTable("otherData");
+        setLog((log) => log.concat('set table "otherData" result \n')); 
         const keysvalues = await getAllKeysValues();
         setLog((log) => log.concat("keysvalues : " + keysvalues.length + "\n"));
         for(let i = 0; i< keysvalues.length; i++) {
@@ -130,7 +150,8 @@ const StoreOneDBTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** KeysValues from Second Table Store was not successfull ***\n"));        
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** KeysValues from Second Table Store was not successfull ***\n"));        
       }
       return secondTable;
@@ -182,10 +203,10 @@ const StoreOneDBTwoTables = () => {
           <pre>
             <p>{log}</p>
           </pre>
-          <p class="success display">
+          <p className="success display">
             The set of tests was successful
           </p>
-          <p class="failure display">
+          <p className="failure display">
             The set of tests failed
           </p>
         </div>

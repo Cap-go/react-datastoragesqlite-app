@@ -1,0 +1,6 @@
+[
+	{
+		"pkg": "capacitor-data-storage-sqlite",
+		"classpath": "com.jeep.plugin.capacitor.capacitordatastoragesqlite.CapacitorDataStorageSqlitePlugin"
+	}
+]

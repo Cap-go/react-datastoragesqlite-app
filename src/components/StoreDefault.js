@@ -12,30 +12,40 @@ const StoreDefault = () => {
   useEffect(() => {
     async function testStoreDefault() {
       const keyList1 = ["session","testJson","testNumber"];
-      // open a default store 
-      setLog((log) => log.concat("**** Test Default Store ****\n")); 
-      const resOpen =  await openStore({});
-      if(resOpen) {
-        setLog((log) => log.concat('open Default Store ' + resOpen + "\n"));
+      try {
+        // open a default store 
+        setLog((log) => log.concat("**** Test Default Store ****\n")); 
+        await openStore({});
         // clear the store 
-        const rClear = await clear();
-        if( rClear ) setLog((log) => log.concat('clear Default Store ' + rClear + "\n"));
+        await clear();
         // store a string 
         await setItem("session","Session Opened");
         const session = await getItem('session');
-        if( session ) setLog((log) => log.concat("session " + session + "\n")); 
+        if( session != null ) {
+          setLog((log) => log.concat("session " + session + "\n")); 
+        } else {
+          throw(Error("session return null"));
+        }
         // store a JSON Object in the default store
         const data = {'a':20,'b':'Hello World','c':{'c1':40,'c2':'cool'}};
         await setItem("testJson",JSON.stringify(data));
         const testJson = await getItem("testJson");
-        if( testJson ) setLog((log) => log.concat("testJson " + testJson + "\n")); 
+        if( testJson != null ) {
+          setLog((log) => log.concat("testJson " + testJson + "\n")); 
+        } else {
+          throw(Error("testJson return null"));
+        }
         // store a number in the default store
         const data1 = 243.567;
         await setItem("testNumber",data1.toString());
         // read number from the store
         const testNumber = await getItem("testNumber");
-        if( testNumber ) setLog((log) => log.concat("testNumber " + testNumber + "\n")); 
-        // isKey test
+        if( testNumber ) {
+          setLog((log) => log.concat("testNumber " + testNumber + "\n")); 
+        } else {
+          throw(Error("testNumber return null"));
+        }
+      // isKey test
         const iskey = await isKey('testNumber');
         setLog((log) => log.concat('iskey testNumber ' + iskey + "\n")); 
         const iskey1 = await isKey('foo');
@@ -61,8 +71,8 @@ const StoreDefault = () => {
         }
 
         // Remove a key 
-        const res = await removeItem('testJson')
-        if( res ) setLog((log) => log.concat("remove testJson " + res + "\n")); 
+        await removeItem('testJson')
+        setLog((log) => log.concat("remove testJson \n")); 
         // Get All Keys
         const keys1 = await getAllKeys();
         setLog((log) => log.concat("keys : " + keys1.length + "\n"));
@@ -78,7 +88,8 @@ const StoreDefault = () => {
             document.querySelector('.failure').classList.remove('display');
           }
   
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** test default store was not successfull ***\n"));
         document.querySelector('.failure').classList.remove('display');
       }
@@ -102,10 +113,10 @@ const StoreDefault = () => {
           <pre>
             <p>{log}</p>
           </pre>
-          <p class="success display">
+          <p className="success display">
             The set of tests was successful
           </p>
-          <p class="failure display">
+          <p className="failure display">
             The set of tests failed
           </p>
         </div>

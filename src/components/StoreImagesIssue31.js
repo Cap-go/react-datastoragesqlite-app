@@ -19,15 +19,14 @@ const StoreImagesIssue31 = () => {
                 "https:/example.com/image2"
             ];
             let isValid = false;
-            const resOpen =  await openStore({database:"pfmaster",table:"profiles"});
-            console.log("resOpen ", resOpen)
-            if(resOpen) {
+            try {
+                await openStore({database:"pfmaster",table:"profiles"});
                 await setItem("img1", JSON.stringify({
                   id: "img1",
                   profileImg: imagesUrl[0],
                   text1: "This is image 1"  
                 }));
-                const iskey = await isKey('img1');
+                let iskey = await isKey('img1');
                 setLog((log) => log.concat("iskey img1 " + iskey + " in table 'profiles'\n"));
                 // Get All KeysValues
                 const keysvalues = await getAllKeysValues();
@@ -37,14 +36,43 @@ const StoreImagesIssue31 = () => {
                     " value[" + i + "] = " + keysvalues[i].value  + "\n"));
                 }
                 // Open the profilesImages table
-                const r = await setTable("profilesImages");
-                console.log("profilesImages  result " + r.result + " message " + r.message );
-                setLog((log) => log.concat("set table 'profilesImages' result " + r.result + " message " +
-                      r.message + "\n")); 
-                if(r.result) {
-                    await setItem("img1", images[0]);
-                    const iskey = await isKey('img1');
-                    setLog((log) => log.concat("iskey img1 " + iskey + " in table 'profilesImages'\n"));
+                await setTable("profilesImages");
+                setLog((log) => log.concat("set table 'profilesImages' \n")); 
+                await setItem("img1", images[0]);
+                iskey = await isKey('img1');
+                setLog((log) => log.concat("iskey img1 " + iskey + " in table 'profilesImages'\n"));
+                // Get All KeysValues
+                const keysvalues1 = await getAllKeysValues();
+                setLog((log) => log.concat("keysvalues table 'profilesImages' : " + keysvalues1.length + "\n"));
+                for(let i = 0; i< keysvalues1.length;i++) {
+                setLog((log) => log.concat(" key[" + i + "] = " + keysvalues1[i].key +
+                    " value[" + i + "] = " + keysvalues1[i].value  + "\n"));
+                }
+                // Set profiles table
+                await setTable("profiles");
+                setLog((log) => log.concat("set table 'profiles' result \n")); 
+                await setItem("img2", JSON.stringify({
+                    id: "img2",
+                    profileImg: imagesUrl[1],
+                    text1: "This is image 2"  
+                }));
+                iskey = await isKey('img2');
+                setLog((log) => log.concat("iskey img2 " + iskey + " in table 'profiles'\n"));
+                // Get All KeysValues
+                const keysvalues2 = await getAllKeysValues();
+                setLog((log) => log.concat("keysvalues table 'profiles' : " + keysvalues2.length + "\n"));
+                for(let i = 0; i< keysvalues2.length;i++) {
+                setLog((log) => log.concat(" key[" + i + "] = " + keysvalues2[i].key +
+                    " value[" + i + "] = " + keysvalues2[i].value  + "\n"));
+                }
+                if( keysvalues2.length === 2 ) isValid = true;
+                if(isValid) {
+                    // Open the profilesImages table
+                    await setTable("profilesImages");
+                    setLog((log) => log.concat("set table 'profilesImages' result \n")); 
+                    await setItem("img2", images[1]);
+                    const iskey = await isKey('img2');
+                    setLog((log) => log.concat("iskey img2 " + iskey + " in table 'profilesImages'\n"));
                     // Get All KeysValues
                     const keysvalues = await getAllKeysValues();
                     setLog((log) => log.concat("keysvalues table 'profilesImages' : " + keysvalues.length + "\n"));
@@ -52,73 +80,25 @@ const StoreImagesIssue31 = () => {
                     setLog((log) => log.concat(" key[" + i + "] = " + keysvalues[i].key +
                         " value[" + i + "] = " + keysvalues[i].value  + "\n"));
                     }
-                    // Set profiles table
-                    const r = await setTable("profiles");
-                    console.log("profiles  result " + r.result + " message " + r.message );
-                    setLog((log) => log.concat("set table 'profiles' result " + r.result + " message " +
-                        r.message + "\n")); 
-                    if(r.result) {
-                        await setItem("img2", JSON.stringify({
-                            id: "img2",
-                            profileImg: imagesUrl[1],
-                            text1: "This is image 2"  
-                        }));
-                        const iskey = await isKey('img2');
-                        setLog((log) => log.concat("iskey img2 " + iskey + " in table 'profiles'\n"));
-                        // Get All KeysValues
-                        const keysvalues = await getAllKeysValues();
-                        setLog((log) => log.concat("keysvalues table 'profiles' : " + keysvalues.length + "\n"));
-                        for(let i = 0; i< keysvalues.length;i++) {
-                        setLog((log) => log.concat(" key[" + i + "] = " + keysvalues[i].key +
-                            " value[" + i + "] = " + keysvalues[i].value  + "\n"));
-                        }
-                        if( keysvalues.length === 2 ) isValid = true;
-                        if(isValid) {
-                            // Open the profilesImages table
-                            const r = await setTable("profilesImages");
-                            console.log("profilesImages  result " + r.result + " message " + r.message );
-                            setLog((log) => log.concat("set table 'profilesImages' result " + r.result + " message " +
-                                r.message + "\n")); 
-                            if(r.result) {
-                                await setItem("img2", images[1]);
-                                const iskey = await isKey('img2');
-                                setLog((log) => log.concat("iskey img2 " + iskey + " in table 'profilesImages'\n"));
-                                // Get All KeysValues
-                                const keysvalues = await getAllKeysValues();
-                                setLog((log) => log.concat("keysvalues table 'profilesImages' : " + keysvalues.length + "\n"));
-                                for(let i = 0; i< keysvalues.length;i++) {
-                                setLog((log) => log.concat(" key[" + i + "] = " + keysvalues[i].key +
-                                    " value[" + i + "] = " + keysvalues[i].value  + "\n"));
-                                }
-                                if( keysvalues.length === 2 ) {
-                                    isValid = true;
-                                } else {
-                                    isValid = false;
-                                }
-            
-                            } else {
-                                isValid = false;
-                            }
-                        }
-        
-                    }
-                    if (isValid) {
-                        document.querySelector('.success').classList.remove('display');
-
+                    if( keysvalues.length === 2 ) {
+                        isValid = true;
                     } else {
-                        document.querySelector('.failure').classList.remove('display');
+                        isValid = false;
                     }
+                }
+                if (isValid) {
+                    document.querySelector('.success').classList.remove('display');
 
                 } else {
-                    setLog((log) => log.concat("*** Set 'profilesImages' table failed ***\n"));
                     document.querySelector('.failure').classList.remove('display');
-                 }
+                }
+
                 
-            } else {
+              } catch(err) {
+                setLog((log) => log.concat(`>>> ${err}\n`));
                 setLog((log) => log.concat("*** Set 'profiles' table failed ***\n"));
                 document.querySelector('.failure').classList.remove('display');
             }
-              
         }
     testStoreImagesIssue31();
   }, [ openStore, getItem, setItem, getAllKeys, getAllValues,
@@ -139,10 +119,10 @@ const StoreImagesIssue31 = () => {
           <pre>
             <p>{log}</p>
           </pre>
-          <p class="success display">
+          <p className="success display">
             The test StoreImagesIssue31 was successful
           </p>
-          <p class="failure display">
+          <p className="failure display">
             The test StoreImagesIssue31 failed
           </p>
         </div>

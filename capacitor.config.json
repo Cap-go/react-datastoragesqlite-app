@@ -1,8 +1,0 @@
-{
-  "appId": "com.jeep.app.react.datastoragesqlite",
-  "appName": "react-datastoragesqlite-app",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "build",
-  "cordova": {}
-}

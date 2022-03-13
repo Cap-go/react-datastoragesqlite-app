@@ -16,10 +16,10 @@ const StoreTwoDBsTwoTables = () => {
     const keyList4 = ["comment1","comment2","comment3"];
     async function setFirstDBFirstTable() {
       var firstTable = false;
-      // open a named store 
-      setLog((log) => log.concat("**** Test Two DBs Two Tables Store ****\n")); 
-      const resOpen =  await openStore({database:"myStore",table:"saveData"});
-      if(resOpen) {
+      try {
+        // open a named store 
+        setLog((log) => log.concat("**** Test Two DBs Two Tables Store ****\n")); 
+        await openStore({database:"myStore",table:"saveData"});
         // clear the store table "saveData" for successive test runs
         await clear();
         // store a string 
@@ -38,16 +38,17 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Set First Table Store was not successfull ***\n"));
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Set First Table Store was not successfull ***\n"));
       }
       return firstTable;
     }
     async function setFirstDBSecondTable() {
       var secondTable = false;
-      setLog((log) => log.concat("**** Test First Store Second Table ****\n")); 
-      const resOpen = await openStore({database:"myStore",table:"otherData"});
-      if(resOpen) {
+      try {
+        setLog((log) => log.concat("**** Test First Store Second Table ****\n")); 
+        await openStore({database:"myStore",table:"otherData"});
         // clear the store table "otherData" for successive test runs
         await clear();
         // store data in the new table
@@ -64,16 +65,17 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Set First Store Second Table was not successfull ***\n"));
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Set First Store Second Table was not successfull ***\n"));        
       }
       return secondTable;
     }
     async function updateFirstDBFirstTable() {
       var firstTable = false;
-      setLog((log) => log.concat("**** Test First Store First Table ****\n")); 
-      const r = await setTable("saveData");
-      if(r.result) {
+      try {
+        setLog((log) => log.concat("**** Test First Store First Table ****\n")); 
+        await setTable("saveData");
         await setItem("state",JSON.stringify({'color':"#ff235a",'opacity':0.75}));
         // read app from the store
         await getItem("state");
@@ -86,16 +88,17 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Update First Store First Table was not successfull ***\n"));        
         }           
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Update First Store First Table was not successfull ***\n"));        
       }
       return firstTable;
     }
     async function getKeysValuesFromFirstDBSecondTable() {
       var secondTable = false;
-      setLog((log) => log.concat("**** Test First Store Second Table ****\n")); 
-      const r = await setTable("otherData");
-      if(r.result) {
+      try {
+        setLog((log) => log.concat("**** Test First Store Second Table ****\n")); 
+        await setTable("otherData");
         const keysvalues = await getAllKeysValues();
         if(keysvalues && keysvalues.length === 2 && 
           keyList2.includes(keysvalues[0].key) && keyList2.includes(keysvalues[1].key)) {
@@ -104,17 +107,18 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** KeysValues from First Store Second Table was not successfull ***\n"));        
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** KeysValues from First Store Second Table was not successfull ***\n"));        
       }
       return secondTable;
     }
     async function setSecondDBFirstTable() {
       var firstTable = false;
-      // open a named store 
-      setLog((log) => log.concat("**** Test Second Store First Table ****\n")); 
-      const resOpen =  await openStore({database:"secondStore",table:"saveData"});
-      if(resOpen) {
+      try {
+        // open a named store 
+        setLog((log) => log.concat("**** Test Second Store First Table ****\n")); 
+        await openStore({database:"secondStore",table:"saveData"});
         // clear the store table "saveData" for successive test runs
         await clear();
         // store a string 
@@ -133,16 +137,17 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Set Second Store First Table was not successfull ***\n"));
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Set Second Store First Table was not successfull ***\n"));
       }
       return firstTable;
     }
     async function setSecondDBSecondTable() {
       var secondTable = false;
-      setLog((log) => log.concat("**** Test Second Store First Table ****\n")); 
-      const resOpen =  await openStore({database:"secondStore",table:"comments"});
-      if(resOpen) {
+      try {
+        setLog((log) => log.concat("**** Test Second Store First Table ****\n")); 
+        await openStore({database:"secondStore",table:"comments"});
         // clear the store table "saveData" for successive test runs
         await clear();
         // store data in the new table
@@ -159,16 +164,17 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Set Second Store Second Table was not successfull ***\n"));
         }
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Set Second Store Second Table was not successfull ***\n"));
       }
       return secondTable;
     }    
     async function updateSecondDBFirstTable() {
       var firstTable = false;
-      setLog((log) => log.concat("**** Test Second Store First Table ****\n")); 
-      const r = await setTable("saveData");
-      if(r.result) {
+      try {
+        setLog((log) => log.concat("**** Test Second Store First Table ****\n")); 
+        await setTable("saveData");
         await setItem("state",JSON.stringify({platform: ['ios','android','web']}));
         await getItem("state");
         // Get All Keys
@@ -181,16 +187,17 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Update Second Store First Table was not successfull ***\n"));        
         }           
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Update Second Store First Table was not successfull ***\n"));        
       }
       return firstTable;
     }
     async function getKeysValuesFromSecondDBSecondTable() {
       var secondTable = false;
-      setLog((log) => log.concat("**** Test Second Store Second Table ****\n")); 
-      const r = await setTable("comments");
-      if(r.result) {
+      try {
+        setLog((log) => log.concat("**** Test Second Store Second Table ****\n")); 
+        await setTable("comments");
         await setItem("comment3", "Suspendisse lobortis volutpat elit ac mattis");
         await getItem("comment3");
         // Get All Keys
@@ -203,7 +210,8 @@ const StoreTwoDBsTwoTables = () => {
         } else {
           setLog((log) => log.concat("*** Update Second Store Second Table was not successfull ***\n"));        
         }           
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Update Second Store Second Table was not successfull ***\n"));        
       }
       return secondTable;
@@ -281,10 +289,10 @@ const StoreTwoDBsTwoTables = () => {
           <pre>
             <p>{log}</p>
           </pre>
-          <p class="success display">
+          <p className="success display">
             The set of tests was successful
           </p>
-          <p class="failure display">
+          <p className="failure display">
             The set of tests failed
           </p>
         </div>

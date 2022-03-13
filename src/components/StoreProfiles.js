@@ -13,14 +13,14 @@ const StoreProfiles = () => {
   const {openStore, setItem, getAllKeysValues, clear} = useStorageSQLite();
   useEffect(() => {
     async function testStoreProfiles() {
-      // open a default store 
-      setLog((log) => log.concat("**** Test Profiles Store ****\n")); 
-      const resOpen =  await openStore({database:"testProfiles",table:"profiles"});
-      if(resOpen) {
-        setLog((log) => log.concat('open Profiles Store ' + resOpen + "\n"));
+      try {
+        // open a default store 
+        setLog((log) => log.concat("**** Test Profiles Store ****\n")); 
+        await openStore({database:"testProfiles",table:"profiles"});
+        setLog((log) => log.concat('open Profiles Store \n'));
         // clear the store 
-        const rClear = await clear();
-        if( rClear ) setLog((log) => log.concat('clear Profiles Store ' + rClear + "\n"));
+        await clear();
+        setLog((log) => log.concat('clear Profiles Store \n'));
         // store profiles
         const jsonProfiles = [
           {id:"profile_kh1iwmnm",profileImg:"capacitor://localhost/_capacitor_file_/var/mobile/Containers/Data/Application/36884AA4-3B3D-45E2-9515-2460C0BBD0AA/Documents/pfimages/kh1iweg6.jpeg",firstName:"caca",lastName:"affa"},
@@ -33,8 +33,7 @@ const StoreProfiles = () => {
         setLog((log) => log.concat("keysvalues : " + keysvalues.length + "\n"));
         if (keysvalues.length === 2) {
           let profiles = keysvalues.map(c => JSON.parse(c["value"]));
-          console.log("profiles ", profiles);
-          setProfileList([...profiles]);
+          setProfileList(profiles);
           setLog((log) => log.concat("*** Test Profiles Store was successfull ***\n"));
           document.querySelector('.success').classList.remove('display');
 
@@ -42,7 +41,8 @@ const StoreProfiles = () => {
           setLog((log) => log.concat("*** Test Profiles Store was not successfull ***\n"));
           document.querySelector('.failure').classList.remove('display');
         }  
-      } else {
+      } catch(err) {
+        setLog((log) => log.concat(`>>> ${err}\n`));
         setLog((log) => log.concat("*** Test Profiles Store was not successfull ***\n"));
         document.querySelector('.failure').classList.remove('display');
       }
@@ -65,15 +65,15 @@ const StoreProfiles = () => {
           <pre>
             <p>{log}</p>
           </pre>
-          <p class="success display">
+          <p className="success display">
             The set of tests was successful
           </p>
-          <p class="failure display">
+          <p className="failure display">
             The set of tests failed
           </p>
           <ul>
             {profileList.map(item => (
-              <li key={item}>
+              <li key={item.id}>
                 <div>{item.id} {item.lastName}</div>
               </li>
             ))}
