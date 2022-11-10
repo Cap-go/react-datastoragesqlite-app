@@ -46,8 +46,8 @@
   },
   "devDependencies": {
     "@capacitor/cli": "^3.4.3",
-    "capacitor-data-storage-sqlite": "^3.4.3",
-    "react-data-storage-sqlite-hook": "^1.1.3",
+    "capacitor-data-storage-sqlite": "^4.0.1",
+    "react-data-storage-sqlite-hook": "^2.0.0",
     "source-map-explorer": "^2.5.2"
   },
   "description": "React App for capacitor-data-storage-sqlite",
